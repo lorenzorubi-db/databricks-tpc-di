@@ -26,7 +26,7 @@
     },
     {
       "name": "wh_db",
-      "default": "{{ wh_target }}_{{ exec_type }}"
+      "default": "{{ wh_target }}"
     },
     {
       "name": "predictive_optimization",
