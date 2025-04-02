@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-CREATE OR REPLACE TABLE ${catalog}.${wh_db}_${scale_factor}.DimCustomer (
+CREATE OR REPLACE TABLE ${catalog}.${wh_db}.DimCustomer (
   ${tgt_schema}
   ${constraints}
 )
@@ -14,7 +14,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.DimCustomer
+INSERT OVERWRITE ${catalog}.${wh_db}.DimCustomer
 WITH customerincremental AS (
   SELECT
     customerid,
@@ -104,7 +104,7 @@ Customers as (
     1 batchid,
     update_ts
   FROM
-    ${catalog}.${wh_db}_${scale_factor}_stage.CustomerMgmt c
+    ${catalog}.${wh_db}.stage_CustomerMgmt c
   WHERE
     ActionType in ('NEW', 'INACT', 'UPDCUST')
   UNION ALL
@@ -134,7 +134,7 @@ Customers as (
     c.batchid,
     timestamp(bd.batchdate) update_ts
   FROM customerincremental c
-  JOIN ${catalog}.${wh_db}_${scale_factor}.BatchDate bd 
+  JOIN ${catalog}.${wh_db}.BatchDate bd
     ON c.batchid = bd.batchid
 ),
 CustomerFinal AS (
@@ -336,11 +336,11 @@ SELECT
   c.effectivedate,
   c.enddate
 FROM CustomerFinal c
-JOIN ${catalog}.${wh_db}_${scale_factor}.TaxRate r_lcl 
+JOIN ${catalog}.${wh_db}.TaxRate r_lcl
   ON c.lcl_tx_id = r_lcl.TX_ID
-JOIN ${catalog}.${wh_db}_${scale_factor}.TaxRate r_nat 
+JOIN ${catalog}.${wh_db}.TaxRate r_nat
   ON c.nat_tx_id = r_nat.TX_ID
-LEFT JOIN ${catalog}.${wh_db}_${scale_factor}_stage.ProspectIncremental p 
+LEFT JOIN ${catalog}.${wh_db}.stage_ProspectIncremental p
   on 
     upper(p.lastname) = upper(c.lastname)
     and upper(p.firstname) = upper(c.firstname)
