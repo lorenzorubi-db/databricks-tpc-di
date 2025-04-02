@@ -27,7 +27,7 @@ def copy_directory(source_dir, target_dir, overwrite):
     print(f"The folder you're trying to copy doesn't exist: {source_dir}")
     
 def generate_data():
-  DRIVER_ROOT      = "/local_disk0"
+  DRIVER_ROOT      = "/tmp"
   tpcdi_tmp_path   = "/tmp/tpcdi/"
   driver_tmp_path  = f"{DRIVER_ROOT}{tpcdi_tmp_path}datagen/"
   driver_out_path  = f"{DRIVER_ROOT}{tpcdi_tmp_path}sf={scale_factor}"
@@ -52,8 +52,7 @@ def generate_data():
       if not catalog_exists:
         spark.sql(f"""CREATE CATALOG IF NOT EXISTS {catalog}""")
         spark.sql(f"""GRANT ALL PRIVILEGES ON CATALOG {catalog} TO `account users`""")
-      spark.sql(f"CREATE DATABASE IF NOT EXISTS {catalog}.tpcdi_raw_data COMMENT 'Schema for TPC-DI Raw Files Volume'")
-      spark.sql(f"CREATE VOLUME IF NOT EXISTS {catalog}.tpcdi_raw_data.tpcdi_volume COMMENT 'TPC-DI Raw Files'")
+      spark.sql(f"CREATE VOLUME IF NOT EXISTS {catalog}.{wh_target}.tpcdi_volume COMMENT 'TPC-DI Raw Files'")
     filenames = [os.path.join(root, name) for root, dirs, files in os.walk(top=driver_out_path , topdown=True) for name in files]
     dbutils.fs.mkdirs(blob_out_path)
     for dir in next(os.walk(driver_out_path))[1]:

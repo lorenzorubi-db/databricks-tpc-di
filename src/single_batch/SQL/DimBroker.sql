@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-CREATE OR REPLACE TABLE ${catalog}.${wh_db}_${scale_factor}.DimBroker (
+CREATE OR REPLACE TABLE ${catalog}.${wh_db}.DimBroker (
   ${tgt_schema}
   ${constraints}
 )
@@ -14,7 +14,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.DimBroker
+INSERT OVERWRITE ${catalog}.${wh_db}.DimBroker
 SELECT
   employeeid sk_brokerid,
   employeeid brokerid,
@@ -27,7 +27,7 @@ SELECT
   employeephone phone,
   true iscurrent,
   1 batchid,
-  (SELECT min(to_date(datevalue)) as effectivedate FROM ${catalog}.${wh_db}_${scale_factor}.DimDate) effectivedate,
+  (SELECT min(to_date(datevalue)) as effectivedate FROM ${catalog}.${wh_db}.DimDate) effectivedate,
   date('9999-12-31') enddate
 FROM read_files(
   "${tpcdi_directory}sf=${scale_factor}/Batch1",

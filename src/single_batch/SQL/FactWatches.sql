@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-USE ${catalog}.${wh_db}_${scale_factor};
+USE ${catalog}.${wh_db};
 CREATE OR REPLACE TABLE FactWatches (
   ${tgt_schema}
   ${constraints}
@@ -15,7 +15,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.FactWatches
+INSERT OVERWRITE ${catalog}.${wh_db}.FactWatches
 with watchhistory AS (
   SELECT
     *,
@@ -63,12 +63,12 @@ select
   bigint(date_format(dateremoved, 'yyyyMMdd')) sk_dateid_dateremoved,
   wh.batchid 
 from watches wh
-JOIN ${catalog}.${wh_db}_${scale_factor}.DimSecurity s 
+JOIN ${catalog}.${wh_db}.DimSecurity s
   ON 
     s.symbol = wh.symbol
     AND wh.dateplaced >= s.effectivedate 
     AND wh.dateplaced < s.enddate
-JOIN ${catalog}.${wh_db}_${scale_factor}.DimCustomer c 
+JOIN ${catalog}.${wh_db}.DimCustomer c
   ON
     wh.customerid = c.customerid
     AND wh.dateplaced >= c.effectivedate 

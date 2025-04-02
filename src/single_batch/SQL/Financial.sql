@@ -7,7 +7,7 @@
 
 -- COMMAND ----------
 
-USE ${catalog}.${wh_db}_${scale_factor};
+USE ${catalog}.${wh_db};
 CREATE OR REPLACE TABLE Financial (
   ${tgt_schema}
   ${constraints}
@@ -16,7 +16,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT INTO ${catalog}.${wh_db}_${scale_factor}.Financial
+INSERT INTO ${catalog}.${wh_db}.Financial
 SELECT 
   sk_companyid,
   cast(substring(value, 1, 4) AS INT) AS fi_year,
@@ -32,8 +32,8 @@ SELECT
   cast(substring(value, 126, 17) AS DOUBLE) AS fi_liability,
   cast(substring(value, 143, 13) AS BIGINT) AS fi_out_basic,
   cast(substring(value, 156, 13) AS BIGINT) AS fi_out_dilut
-FROM ${catalog}.${wh_db}_${scale_factor}_stage.FinWire
-JOIN ${catalog}.${wh_db}_${scale_factor}.DimCompany dc
+FROM ${catalog}.${wh_db}.stage_FinWire
+JOIN ${catalog}.${wh_db}.DimCompany dc
 ON
   rectype = 'FIN_NAME'
   and trim(substring(value, 169, 60)) = dc.NAME
@@ -55,8 +55,8 @@ SELECT
   cast(substring(value, 126, 17) AS DOUBLE) AS fi_liability,
   cast(substring(value, 143, 13) AS BIGINT) AS fi_out_basic,
   cast(substring(value, 156, 13) AS BIGINT) AS fi_out_dilut
-FROM ${catalog}.${wh_db}_${scale_factor}_stage.FinWire
-JOIN ${catalog}.${wh_db}_${scale_factor}.DimCompany dc
+FROM ${catalog}.${wh_db}.stage_FinWire
+JOIN ${catalog}.${wh_db}.DimCompany dc
 ON
   rectype = 'FIN_COMPANYID'
   and trim(substring(value, 169, 60)) = dc.COMPANYID

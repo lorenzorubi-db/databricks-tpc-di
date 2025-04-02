@@ -1,5 +1,5 @@
 -- Databricks notebook source
-CREATE OR REPLACE TABLE ${catalog}.${wh_db}_${scale_factor}.Prospect (
+CREATE OR REPLACE TABLE ${catalog}.${wh_db}.Prospect (
   ${tgt_schema}
   ${constraints}
 )
@@ -7,7 +7,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.Prospect
+INSERT OVERWRITE ${catalog}.${wh_db}.Prospect
 with cust as (
   SELECT 
     lastname,
@@ -15,7 +15,7 @@ with cust as (
     addressline1,
     addressline2,
     postalcode
-  FROM ${catalog}.${wh_db}_${scale_factor}.DimCustomer
+  FROM ${catalog}.${wh_db}.DimCustomer
   WHERE iscurrent
 )
 SELECT 
@@ -46,10 +46,10 @@ SELECT
   numbercreditcards,
   networth,
   marketingnameplate
-FROM ${catalog}.${wh_db}_${scale_factor}_stage.ProspectIncremental p
-JOIN ${catalog}.${wh_db}_${scale_factor}.BatchDate recdate
+FROM ${catalog}.${wh_db}.stage_ProspectIncremental p
+JOIN ${catalog}.${wh_db}.BatchDate recdate
   ON p.recordbatchid = recdate.batchid
-JOIN ${catalog}.${wh_db}_${scale_factor}.BatchDate origdate
+JOIN ${catalog}.${wh_db}.BatchDate origdate
   ON p.batchid = origdate.batchid
 LEFT JOIN cust c
   ON 

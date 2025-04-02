@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-USE ${catalog}.${wh_db}_${scale_factor};
+USE ${catalog}.${wh_db};
 CREATE OR REPLACE TABLE DimCompany (
   ${tgt_schema}
   ${constraints}
@@ -15,7 +15,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.DimCompany
+INSERT OVERWRITE ${catalog}.${wh_db}.DimCompany
 WITH cmp as (
   SELECT
     recdate,
@@ -33,7 +33,7 @@ WITH cmp as (
     trim(substring(value, 306, 24)) AS Country,
     trim(substring(value, 330, 46)) AS CEOname,
     trim(substring(value, 376, 150)) AS Description
-  FROM ${catalog}.${wh_db}_${scale_factor}_stage.FinWire
+  FROM ${catalog}.${wh_db}.stage_FinWire
   WHERE rectype = 'CMP'
 )
 SELECT 
@@ -93,6 +93,6 @@ FROM (
       lead(date(recdate)) OVER (PARTITION BY cik ORDER BY recdate),
       cast('9999-12-31' as date)) enddate
   FROM cmp
-  JOIN ${catalog}.${wh_db}_${scale_factor}.Industry ind ON cmp.industryid = ind.in_id
+  JOIN ${catalog}.${wh_db}.Industry ind ON cmp.industryid = ind.in_id
 )
 where effectivedate < enddate;

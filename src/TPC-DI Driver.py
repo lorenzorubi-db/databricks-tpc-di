@@ -72,7 +72,7 @@ wf_key            = list(workflows_dict)[workflow_vals.index(workflow_type)]
 sku               = wf_key.split('-')
 job_name          = f"{dbutils.widgets.get('job_name')}-SF{scale_factor}-{wf_key}"
 incremental       = True if dbutils.widgets.get("batched") == 'Incremental Batches' else False
-tpcdi_directory = f'/Volumes/{catalog}/tpcdi_raw_data/tpcdi_volume/'
+tpcdi_directory = f'/Volumes/{catalog}/{wh_target}/tpcdi_volume/'
 
 if not lighthouse:
   dbutils.widgets.dropdown("serverless", default_serverless, ['YES', 'NO'], "Enable Serverless")

@@ -9,7 +9,7 @@
 
 -- COMMAND ----------
 
-CREATE OR REPLACE TABLE ${catalog}.${wh_db}_${scale_factor}.${tbl} (
+CREATE OR REPLACE TABLE ${catalog}.${wh_db}.${tbl} (
   ${raw_schema}
   ${constraints}
 )
@@ -17,7 +17,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.${tbl}
+INSERT OVERWRITE ${catalog}.${wh_db}.${tbl}
 SELECT *
 FROM read_files(
   "${tpcdi_directory}sf=${scale_factor}/Batch*",

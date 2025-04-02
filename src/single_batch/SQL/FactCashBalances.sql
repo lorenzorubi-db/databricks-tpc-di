@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-USE ${catalog}.${wh_db}_${scale_factor};
+USE ${catalog}.${wh_db};
 CREATE OR REPLACE TABLE FactCashBalances (
   ${tgt_schema}
   ${constraints}
@@ -15,7 +15,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.FactCashBalances
+INSERT OVERWRITE ${catalog}.${wh_db}.FactCashBalances
 with historical as (
   SELECT
     accountid,
@@ -58,7 +58,7 @@ SELECT
   sum(account_daily_total) OVER (partition by c.accountid order by datevalue) cash,
   c.batchid
 FROM alltransactions c
-JOIN ${catalog}.${wh_db}_${scale_factor}.DimAccount a 
+JOIN ${catalog}.${wh_db}.DimAccount a
   ON 
     c.accountid = a.accountid
     AND c.datevalue >= a.effectivedate 

@@ -76,7 +76,7 @@ workflows_dict      = {
 default_workflow   = workflows_dict['CLUSTER']
 default_sf         = '10'
 default_job_name   = f"{string.capwords(user_name).replace(' ','-')}-TPCDI"
-default_wh         = f"{string.capwords(user_name).replace(' ','_')}_TPCDI"
+default_wh         = f"{string.capwords(user_name).replace(' ','_')}"
 min_dbr_version    = 14.1
 invalid_dbr_list   = ['aarch64', 'ML', 'Snapshot', 'GPU', 'Photon', 'RC', 'Light', 'HLS', 'Beta', 'Latest']
 features_or_perf   = ['Feature-Rich', 'Fastest Performance']
@@ -135,6 +135,6 @@ else:
       "Standard_D64ads_v5" if "Standard_D64ads_v5" in list(node_types.keys())
       else "n2-standard-64" if "n2-standard-64" in list(node_types.keys()) else "m7gd.16xlarge"
     )
-  default_catalog = 'tpcdi' if UC_enabled else 'hive_metastore'
+  default_catalog = 'dbacademy' if UC_enabled else 'hive_metastore'
 
 workflow_vals      = list(workflows_dict.values())

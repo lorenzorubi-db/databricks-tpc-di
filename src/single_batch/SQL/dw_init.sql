@@ -12,7 +12,8 @@
 
 -- COMMAND ----------
 
-CREATE DATABASE IF NOT EXISTS ${catalog}.${wh_db}_${scale_factor};
-CREATE DATABASE IF NOT EXISTS ${catalog}.${wh_db}_${scale_factor}_stage;
--- Enable Predictive Optimization for those workspaces that it is available
-ALTER DATABASE ${catalog}.${wh_db}_${scale_factor} ${pred_opt} PREDICTIVE OPTIMIZATION;
+-- skip for vocareum - no permissions to create schemas
+--CREATE DATABASE IF NOT EXISTS ${catalog}.${wh_db}_${scale_factor};
+--CREATE DATABASE IF NOT EXISTS ${catalog}.${wh_db}_${scale_factor}_stage;
+---- Enable Predictive Optimization for those workspaces that it is available
+--ALTER DATABASE ${catalog}.${wh_db}_${scale_factor} ${pred_opt} PREDICTIVE OPTIMIZATION;

@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-USE ${catalog}.${wh_db}_${scale_factor};
+USE ${catalog}.${wh_db};
 CREATE OR REPLACE TABLE DimSecurity (
   ${tgt_schema}
   ${constraints}
@@ -15,7 +15,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.DimSecurity 
+INSERT OVERWRITE ${catalog}.${wh_db}.DimSecurity
 WITH SEC as (
   SELECT
     recdate AS effectivedate,
@@ -29,7 +29,7 @@ WITH SEC as (
     to_date(substring(value, 123, 8), 'yyyyMMdd') AS firsttradeonexchange,
     cast(substring(value, 131, 12) AS DOUBLE) AS Dividend,
     trim(substring(value, 143, 60)) AS conameorcik
-  FROM ${catalog}.${wh_db}_${scale_factor}_stage.FinWire
+  FROM ${catalog}.${wh_db}.stage_FinWire
   WHERE rectype = 'SEC'
 ),
 dc as (
@@ -38,14 +38,14 @@ dc as (
     name conameorcik,
     EffectiveDate,
     EndDate
-  FROM ${catalog}.${wh_db}_${scale_factor}.DimCompany
+  FROM ${catalog}.${wh_db}.DimCompany
   UNION ALL
   SELECT 
     sk_companyid,
     cast(companyid as string) conameorcik,
     EffectiveDate,
     EndDate
-  FROM ${catalog}.${wh_db}_${scale_factor}.DimCompany
+  FROM ${catalog}.${wh_db}.DimCompany
 ),
 SEC_prep AS (
   SELECT 

@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-USE ${catalog}.${wh_db}_${scale_factor};
+USE ${catalog}.${wh_db};
 CREATE OR REPLACE TABLE DimAccount (
   ${tgt_schema}
   ${constraints}
@@ -15,7 +15,7 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.DimAccount
+INSERT OVERWRITE ${catalog}.${wh_db}.DimAccount
 WITH accountincremental AS (
   SELECT
     * except(cdc_flag, cdc_dsn),
@@ -41,7 +41,7 @@ account AS (
     update_ts,
     1 batchid
   FROM
-    ${catalog}.${wh_db}_${scale_factor}_stage.CustomerMgmt c
+    ${catalog}.${wh_db}.stage_CustomerMgmt c
   WHERE
     ActionType NOT IN ('UPDCUST', 'INACT')
   UNION ALL
@@ -62,7 +62,7 @@ account AS (
     a.batchid
   FROM
     accountincremental a
-    JOIN ${catalog}.${wh_db}_${scale_factor}.BatchDate bd ON a.batchid = bd.batchid
+    JOIN ${catalog}.${wh_db}.BatchDate bd ON a.batchid = bd.batchid
 ),
 account_final AS (
   SELECT
@@ -118,7 +118,7 @@ account_cust_updates AS (
     ) effectivedate,
     if(a.enddate > c.enddate, c.enddate, a.enddate) enddate
   FROM account_final a
-  FULL OUTER JOIN ${catalog}.${wh_db}_${scale_factor}.DimCustomer c 
+  FULL OUTER JOIN ${catalog}.${wh_db}.DimCustomer c
     ON a.customerid = c.customerid
     AND c.enddate > a.effectivedate
     AND c.effectivedate < a.enddate
@@ -137,5 +137,5 @@ SELECT
   a.effectivedate,
   a.enddate
 FROM account_cust_updates a
-JOIN ${catalog}.${wh_db}_${scale_factor}.DimBroker b 
+JOIN ${catalog}.${wh_db}.DimBroker b
   ON a.brokerid = b.brokerid;

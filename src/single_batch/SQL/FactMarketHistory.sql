@@ -6,7 +6,7 @@
 
 -- COMMAND ----------
 
-USE ${catalog}.${wh_db}_${scale_factor};
+USE ${catalog}.${wh_db};
 CREATE OR REPLACE TABLE FactMarketHistory (
   ${tgt_schema}
   ${constraints}
@@ -15,14 +15,14 @@ TBLPROPERTIES (${tbl_props});
 
 -- COMMAND ----------
 
-INSERT OVERWRITE ${catalog}.${wh_db}_${scale_factor}.FactMarketHistory
+INSERT OVERWRITE ${catalog}.${wh_db}.FactMarketHistory
 WITH companyfinancials as (
   SELECT
     f.sk_companyid,
     fi_qtr_start_date,
     sum(fi_basic_eps) OVER (PARTITION BY companyid ORDER BY fi_qtr_start_date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) - fi_basic_eps sum_fi_basic_eps
-  FROM ${catalog}.${wh_db}_${scale_factor}.Financial f
-  JOIN ${catalog}.${wh_db}_${scale_factor}.DimCompany d
+  FROM ${catalog}.${wh_db}.Financial f
+  JOIN ${catalog}.${wh_db}.DimCompany d
     on f.sk_companyid = d.sk_companyid
 ),
 dailymarket as (
@@ -87,7 +87,7 @@ select
   dm_vol volume,
   mh.batchid
 FROM markethistory mh
-JOIN ${catalog}.${wh_db}_${scale_factor}.DimSecurity s 
+JOIN ${catalog}.${wh_db}.DimSecurity s
   ON 
     s.symbol = mh.dm_s_symb
     AND mh.dm_date >= s.effectivedate 
